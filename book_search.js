@@ -18,15 +18,29 @@
  * @param {JSON} scannedTextObj - A JSON object representing the scanned text.
  * @returns {JSON} - Search results.
  * */ 
+
  function findSearchTermInBooks(searchTerm, scannedTextObj) {
     /** You will need to implement your search and 
      * return the appropriate object here. */
-
     var result = {
-        "SearchTerm": "",
+        "SearchTerm": searchTerm,
         "Results": []
     };
-    
+    //First loop to scan object
+    for(const book of scannedTextObj) {
+        //Second loop to scan object "Content" to target the Text.
+        for(const content of book.Content) {
+            //Checking to see if the searchTerm is in the Text, if it is then push the following to the results.
+            if(content.Text.includes(searchTerm)) {
+                result.Results.push({
+                    ISBN: book.ISBN,
+                    Page: content.Page,
+                    Line: content.Line
+                })
+            }
+        }
+    }
+
     return result; 
 }
 
@@ -82,6 +96,19 @@ const twentyLeaguesOut = {
  * 
  * Please add your unit tests below.
  * */
+    //POSITIVE TEST
+    const posTest = findSearchTermInBooks('the', twentyLeaguesIn);
+    console.log('Results:', posTest.Results.length > 0 ? 'Search term found' : 'Search term not found')
+
+    //NEGATIVE TEST 
+    const negTest = findSearchTermInBooks('the', twentyLeaguesIn);
+    console.log('Results:', negTest.Results.length > 0 ? 'Search term found' : 'Search term not found')
+
+    //EDGE CASE TEST
+    const caseTest = findSearchTermInBooks('The', twentyLeaguesIn);
+    console.log('Results:', caseTest.Results.length > 0 ? 'Passed' : "Failed" )
+
+
 
 /** We can check that, given a known input, we get a known output. */
 const test1result = findSearchTermInBooks("the", twentyLeaguesIn);
